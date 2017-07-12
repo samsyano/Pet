@@ -1,12 +1,18 @@
 package com.example.samson.pets;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
+
+import com.example.samson.pets.data.PetContract;
+import com.example.samson.pets.data.PetDbHelper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        displayDatabaseInfo();
     }
 
     @Override
@@ -46,5 +54,22 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+TextView textView;
+    private void displayDatabaseInfo(){
+        PetDbHelper petDbHelper = new PetDbHelper(getApplicationContext());
+
+        SQLiteDatabase sqlDb = petDbHelper.getReadableDatabase();
+
+        Cursor cursor = sqlDb.rawQuery("SELECT * FROM " + PetContract.PetEntry.DB_TABLE, null);
+
+        try{
+            textView = (TextView) findViewById(R.id.text_view_pet);
+
+            textView.setText("Number os rows in pet db table: "+ cursor.getCount());
+        }finally {
+            cursor.close();
+        }
     }
 }

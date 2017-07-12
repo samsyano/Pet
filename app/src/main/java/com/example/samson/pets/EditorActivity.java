@@ -14,6 +14,8 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.example.samson.pets.data.PetContract;
+
 public class EditorActivity extends AppCompatActivity {
 
     EditText nameText;
@@ -54,11 +56,11 @@ public class EditorActivity extends AppCompatActivity {
 
                 if(!TextUtils.isEmpty(selection)){
                     if(selection.equals(getString(R.string.gender_male))){
-                        mGender = 1;
+                        mGender = PetContract.PetEntry.GENDER_MALE;
                     }else if(selection.equals(getString(R.string.gender_female))){
-                        mGender = 2;
+                        mGender = PetContract.PetEntry.GENDER_FEMALE;
                     }else{
-                        mGender = 0;
+                        mGender = PetContract.PetEntry.GENDER_UNKNOWN;
                     }
                 }
             }
