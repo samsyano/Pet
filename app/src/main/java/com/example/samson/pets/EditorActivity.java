@@ -1,11 +1,14 @@
 package com.example.samson.pets;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,8 +16,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.samson.pets.data.PetContract;
+import com.example.samson.pets.data.PetDbHelper;
 
 public class EditorActivity extends AppCompatActivity {
 
@@ -70,16 +75,51 @@ public class EditorActivity extends AppCompatActivity {
                 mGender = 0;
             }
         });
+        petDbHelper = new PetDbHelper(this);
+    }
+
+    PetDbHelper petDbHelper;
+    private void insertDummy(){
+        SQLiteDatabase db = petDbHelper.getWritableDatabase();
+
+        /*
+        * declaring the edit text params*/
+        String pet_name = nameText.getText().toString().trim();
+        String pet_breed = breedText.getText().toString().trim();
+        String pet_weight = weightText.getText().toString().trim();
+        Integer petweight;
+        if(pet_weight.equals("")){
+            petweight = 0;
+        }else {
+            petweight = Integer.parseInt(pet_weight);
+        }
 
 
+        ContentValues cv = new ContentValues();
+        cv.put(PetContract.PetEntry.PET_NAME, pet_name);
+        cv.put(PetContract.PetEntry.PET_BREED, pet_breed);
+        cv.put(PetContract.PetEntry.PET_GENDER, mGender);
+        cv.put(PetContract.PetEntry.PET_WEIGHT, petweight);
 
+       Long dd = db.insert(PetContract.PetEntry.DB_TABLE, null, cv);
+        if(dd != -1){
+            Toast.makeText(this, "Pet saved with id "+ dd , Toast.LENGTH_LONG).show();
+        }else {
+            Toast.makeText(this, "Pet saved with id "+ dd , Toast.LENGTH_LONG).show();
+        }
+        Log.i("PET DATABASE:  ", dd.toString());
+    }
+    private void Return(){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_save:
-
+                insertDummy();
+                Return();
                 return true;
             case R.id.action_delete:
 
