@@ -26,6 +26,12 @@ public final class PetContract {
         public static final int GENDER_FEMALE = 2;
        public static final int GENDER_UNKNOWN = 0;
 
+       /*
+       * */
+
+       public static final String CONTENT_AUTHORITY = "com.example.android.pets";
+       public static final String PATH_PET = "pets";
+
 
 
 
